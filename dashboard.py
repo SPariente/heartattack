@@ -37,173 +37,230 @@ for i in hd_predictors_num_list:
 
 #Define the layout of the dash app
 app.layout = html.Div( 
-    [html.H1('Heart Disease data exploration dashboard',#App title
-             style = {
+    [html.H1('Heart Disease data exploration dashboard', #App title
+             style = { 
                  'textalign': 'center',
-                 'font-size': 40}),
+                 'font-size': 40,
+                 'font-weight': 'bold'
+             }
+            ),
      html.Br(),
-     html.H2('Primary filters',#Title for primary filters field
-             style = {
+     html.H2('Primary filters', #Title for primary filters field
+             style = { 
                  'textalign':'left',
-                 'font-size': 20,
-                 'padding': 10}),
-     html.A("Select a gender:",
+                 'font-size': 20
+             }
+            ),
+     html.A("Select a gender:", #Directions for the dropdown menu
             style = {
                 'textalign': 'left',
-                'font-size': 16}),
-     dcc.Dropdown(#Sex dropdown
-         id = 'sex_input',
+                'font-size': 16
+            }
+           ),
+     dcc.Dropdown( #Sex dropdown menu
+         id = 'sex_input', 
          value = 'Any',
          options = sex_list,
          placeholder = 'Filter by gender here',
          searchable = True),
      html.Br(),
-     html.A("Select an age range:",
+     html.A("Select an age range:", #Directions for the slider
             style = {
                 'textalign': 'left',
-                'font-size': 16}),
-     dcc.RangeSlider(#Double-ended age range slider
+                'font-size': 16
+            }
+           ),
+     dcc.RangeSlider( #Double-ended age range slider
          id = 'age_input',
          min = 25,
          max = 80,
-         step = 5,
-         value = [min(h_data['Age']), max(h_data['Age'])],
-         marks = {
+         step = 5, #5 year step for slider
+         value = [min(h_data['Age']), max(h_data['Age'])], #Initial values = whole range in data set
+         marks = { #Major ticks every 10 years
+             min(h_data['Age']):str(min(h_data['Age'])),
+             max(h_data['Age']):str(max(h_data['Age'])),
              30:'30',
              40:'40',
              50:'50',
              60:'60',
-             70:'70',
-             80:'80'
+             70:'70'
          }
      ),
      html.Div(children = [#Create a sub-division containing all graphs
          html.Div(children = [#Create a sub-division containing categorical indicator graphs
-             html.H2('Categorical indicators',
+             html.H2('Categorical values',
                      style = {
                          'textalign':'left',
                          'font-size': 20,
-                         'padding': 10}
+                         'font-weight':'bold'
+                     }
                     ), 
              html.Br(),
-             html.A('Select a categorical predictor:',
-                    style = {'textalign': 'left',
-                             'font-size': 16}
+             html.A('Select a categorical predictor:', #Directions for the dropdown menu
+                    style = {
+                        'textalign': 'left',
+                        'font-size': 16
+                    }
                    ),
-             dcc.Dropdown(#Dropdown input field to select a categorical predictor
+             dcc.Dropdown( #Dropdown input field to select a categorical predictor
                  id = 'predictors_cat_input',
                  value = hd_predictors_cat_list[0],
                  options = hd_predictors_cat,
                  placeholder = "Select a categorical predictor",
                  searchable = True
              ),
-             html.Label('Heart disease sunburst chart:',
+             html.Br(),
+             html.Label('Heart disease sunburst chart', #Title of the chart
                         style = {
                             'textalign': 'left',
-                            'font-size': 18}
+                            'font-size': 18
+                        }
                        ),
              html.Div(dcc.Graph(id = 'sb_chart')),#Sunburst chart
-             html.Label('Heart disease bar chart:',
+             html.Br(),
+             html.Label('Heart disease bar chart', #Title of the chart
                         style = {
                             'textalign': 'left',
-                            'font-size': 18}
+                            'font-size': 18
+                        }
                        ),
-             html.Div(dcc.Graph(id = 'bar_chart'))#Bar chart
+             html.Div(dcc.Graph(id = 'bar_chart')) #Bar chart
          ], 
-                  style = {'width': '200px', 'margin-left': 0,'padding':10, 'flex':1}),
-         html.Div(children = [#Create a sub-division containing numerical indicator graphs
-             html.H2('Numerical indicators',
+                  style = {
+                      'width': '400px',
+                      'margin-left': 0,
+                      'flex':1,
+                      'border-style': 'none solid none none',
+                      'border-width': '1px',
+                      'border-color': 'gray',
+                      'padding':10
+                  }
+                 ),
+         html.Div(children = [ #Create a sub-division containing numerical indicator graphs
+             html.H2('Numerical values', #Title of the section
                      style = {
                          'textalign':'left',
                          'font-size': 20,
-                         'padding': 10}
+                         'font-weight':'bold'
+                     }
                     ),
              html.Br(),
-             html.A('Select two numerical predictors for the scatter plot:',
+             html.Label('Heart disease scatter plot', #Title of the figure
+                        style = {
+                            'textalign': 'left',
+                            'font-size': 18
+                        }
+                       ),
+             html.Br(),
+             html.Br(),
+             html.A('Select two numerical predictors for the scatter plot:', #Directions for the dropdown menus
                     style = {
                         'textalign': 'left',
-                        'font-size': 16}
+                        'font-size': 16
+                    }
                    ),
-             dcc.Dropdown(#Dropdown input field to select a numerical predictor for the scatter plot
+             dcc.Dropdown( #Dropdown input field to select a numerical predictor for the scatter plot
                  id = 'predictors_num_input1',
                  value = hd_predictors_num_list[0],
                  options = hd_predictors_num,
                  placeholder = "Select a numerical predictor",
                  searchable = True
              ),
-             dcc.Dropdown(#Dropdown input field to select a second numerical predictor for the scatter plot
+             dcc.Dropdown( #Dropdown input field to select a second numerical predictor for the scatter plot
                  id = 'predictors_num_input2',
                  value = hd_predictors_num_list[1],
                  options = hd_predictors_num,
                  placeholder = "Select another numerical predictor",
                  searchable = True
              ),
-             dcc.Checklist(#Check box to ask for a local regression curve
-                 id = 'loess_check',
-                 options = [{'label':'Loess (optional)', 'value':'loess'}]
+             dcc.Checklist( #Check box to ask for a local regression curve if selected
+                 id = 'lowess_check',
+                 options = [{'label':'Lowess (optional)', 'value':'lowess'}]
              ),
-             html.Div(#Fraction selection if loess has been selected
-                 id = 'loess_option',
+             html.Div( #Fraction selection if lowess has been selected
+                 id = 'lowess_option',
                  children = [
-                     html.A('Select the fraction of data used for the loess (0 to 1):',
-                            style = {'textalign': 'left',
-                                     'font-size': 16}
+                     html.A('Select the fraction of data used for the lowess (0 to 1):', #Directions for the input field
+                            style = {
+                                'textalign': 'left',
+                                'font-size': 16
+                            }
                            ),
                      dcc.Input(
-                         id = 'loess_frac',
-                         pattern = '(0.?\d*)|1',#Any number between 0 and 1, inclusive
+                         id = 'lowess_frac',
+                         pattern = '(0.?\d*)|1', #Any number between 0 and 1, inclusive
                          value = 0
                      )                     
                  ],
-                 hidden = True
+                 hidden = True #Is set to False if lowess is selected, making the div visible
              ),
              html.Br(),
-             html.Label('Heart disease scatter plot:',
-                        style = {
-                            'textalign': 'left',
-                            'font-size': 18}
-                       ),
              html.Div(dcc.Graph(id = 'scatter_plot')),#Scatter plot
              html.Br(),
-             html.A('Select a numerical predictor for the box plot:',
+             html.Label('Heart disease box plot', #Title of the figure
+                        style = {
+                            'textalign': 'left',
+                            'font-size': 18
+                        }
+                       ),
+             html.Br(),
+             html.Br(),
+             html.A('Select a numerical predictor for the box plot:', #Directions for the dropdown menu
                     style = {
                         'textalign': 'left',
-                        'font-size': 16}
+                        'font-size': 16
+                    }
                    ),
-             dcc.Dropdown(#Dropdown input field to select a numerical predictor for the box plot
+             dcc.Dropdown( #Dropdown input field to select a numerical predictor for the box plot
                  id = 'predictors_num_input',
                  options = hd_predictors_num,
                  value = hd_predictors_num_list[0],
                  placeholder = "Select a numerical predictor",
                  searchable = True
              ),
-             html.Label('Heart disease box plot:',
-                        style = {
-                            'textalign': 'left',
-                            'font-size': 18}
-                       ),
-             html.Div(dcc.Graph(id = 'box_plot'))#Box plot
-         ],style={'width': '200px', 'margin-left': 0,'padding':10, 'flex':1})
+             html.Div(dcc.Graph(id = 'box_plot')) #Box plot
+         ],
+                  style={
+                      'width': '400px',
+                      'margin-left': 0,
+                      'flex':1,
+                      'border-style': 'none none none solid',
+                      'border-width': '1px',
+                      'border-color': 'gray',
+                      'padding':10
+                  }
+                 )
      ],
-              style={'display': 'flex', 'flex-direction': 'row'})#Ensures the two subdivisions created for graphs appear side by side
-    ])                      
+              style={
+                  'display': 'flex',
+                  'flex-direction': 'row' #Ensures the two subdivisions created for graphs appear side by side
+              }
+             )
+    ],
+    style = {
+        'font-family': 'Verdana',
+        'padding': 10
+            }
+)                      
 
 #Suburst chart callback
-@app.callback(Output(component_id = 'sb_chart', component_property = 'figure'),
-              [Input(component_id = 'sex_input', component_property = 'value'),
-               Input(component_id = 'age_input', component_property = 'value'),
-               Input(component_id = 'predictors_cat_input', component_property = 'value')
+@app.callback(Output(component_id = 'sb_chart', component_property = 'figure'), #sunburst chart component
+              [Input(component_id = 'sex_input', component_property = 'value'), #sex selection component
+               Input(component_id = 'age_input', component_property = 'value'), #age range selection component
+               Input(component_id = 'predictors_cat_input', component_property = 'value') #categorical predictor selection component
               ])
 def get_sb_chart(sex, age, predictor):
-    if sex == 'Any':
+    if sex == 'Any': #Get full data set if 'any' sex selected
         px_data = h_data[h_data['Age'].between(age[0],age[1])]
-    else:
+    else: #Filter data set on the selected sex
         px_data = h_data[(h_data['Sex']==sex) & (h_data['Age'].between(age[0],age[1]))]
         
-    px_data['HeartDisease'] = px_data['HeartDisease'].astype('str')
-    fig = px.sunburst(px_data, path = ('HeartDisease', predictor),
-                color = 'HeartDisease',
-                color_discrete_map={'0':'blue', '1':'red'})
+    px_data['HeartDisease'] = px_data['HeartDisease'].astype('str') #Set type of the 'HeartDisease' field to string
+    fig = px.sunburst(
+        px_data, path = ('HeartDisease', predictor),
+        color = 'HeartDisease',
+        color_discrete_map={'0':'blue', '1':'red'}
+    )
     return fig
 
 #Bar chart callback
@@ -237,10 +294,10 @@ def get_bar_chart(sex, age, predictor):
                Input(component_id = 'age_input', component_property = 'value'),
                Input(component_id = 'predictors_num_input1', component_property = 'value'),
                Input(component_id = 'predictors_num_input2', component_property = 'value'),
-               Input(component_id = 'loess_check', component_property = 'value'),
-               Input(component_id = 'loess_frac', component_property = 'value')
+               Input(component_id = 'lowess_check', component_property = 'value'),
+               Input(component_id = 'lowess_frac', component_property = 'value')
               ])
-def get_scatter_plot(sex, age, predictor1, predictor2, loess_check, frac):
+def get_scatter_plot(sex, age, predictor1, predictor2, lowess_check, frac):
     if sex == 'Any':
         px_data = h_data[h_data['Age'].between(age[0],age[1])]
     else:
@@ -253,8 +310,8 @@ def get_scatter_plot(sex, age, predictor1, predictor2, loess_check, frac):
         'paper_bgcolor': 'rgba(0, 0, 0, 0)'})
     fig.update_yaxes(gridcolor = 'lightgray')
     
-    if loess_check == ['loess']: #Adds loess line plot if selected
-        loess = sm.nonparametric.lowess(
+    if lowess_check == ['lowess']: #Adds lowess line plot if selected
+        lowess_pred = sm.nonparametric.lowess(
             px_data[predictor2],
             px_data[predictor1],
             frac = float(frac)
@@ -262,10 +319,10 @@ def get_scatter_plot(sex, age, predictor1, predictor2, loess_check, frac):
         
         fig.add_trace(
             px.line(
-                x = loess[:,0], 
-                y = loess[:,1], 
+                x = lowess_pred[:,0], 
+                y = lowess_pred[:,1], 
                 color_discrete_sequence=['black'], 
-                labels = {"y":'Loess'}
+                labels = {"y":'Lowess'}
             ).data[0]
         )
         
@@ -305,12 +362,12 @@ def get_predictors_num_list(pred_list): #Removes the already selected predictor 
     hd_predictors_num_unique.remove({'label':pred_list, 'value':pred_list})
     return hd_predictors_num_unique
 
-#Loess fraction selection div callback
-@app.callback(Output(component_id = 'loess_option', component_property = 'hidden'),
-              Input(component_id = 'loess_check', component_property = 'value')
+#Lowess fraction selection div callback
+@app.callback(Output(component_id = 'lowess_option', component_property = 'hidden'),
+              Input(component_id = 'lowess_check', component_property = 'value')
              )
-def get_frac_div(loess_check): #Hides or shows the fraction field for the loess plot
-    if loess_check == ['loess']:
+def get_frac_div(lowess_check): #Hides or shows the fraction field for the lowess plot
+    if lowess_check == ['lowess']:
         return False
     else:
         return True
