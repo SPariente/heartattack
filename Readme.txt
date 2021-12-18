@@ -6,3 +6,4 @@ This git contains:
 - HeartDiseaseTree.png, a visualization of the decision tree resulting from the predictive modelling
 - dashboard.ipynb, a notebook containing a jupyter-dash dashboard allowing for interactive data exploration
 - dashboard.py, python version of the same
+- Dashboard.bat, a batch file to download and run the dashboard script (requires powershell and python3)
